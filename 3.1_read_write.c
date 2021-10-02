@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 	
-	fdc = creat("copy.dat",S_IREAD | S_IWRITE);						//создаю файл куда копирую
+	fdc = creat("copy.dat",S_IREAD | S_IWRITE);				//создаю файл куда копирую
 	if(fdc < 0)
 	{
 		perror("Failed to create file");
