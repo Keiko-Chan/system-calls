@@ -7,7 +7,7 @@
 
 const ssize_t ctime_r_size = 26;
 
-char* get_file_type(const mode_t sb)
+const char* get_file_type(const mode_t sb)
 {
 	switch (sb & S_IFMT)
         {
@@ -20,7 +20,7 @@ char* get_file_type(const mode_t sb)
          	case S_IFSOCK: return "socket";                  break;
          	default:       return "unknown?";                break;
         }
-        
+        return "unknown?";
 }
 
 void print_access(const struct stat *sb)
@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
 {
 	struct stat sb;
 	char s[ctime_r_size];
-	char *type;
 	struct tm bdt;
 	long int nsec;
 	
@@ -59,7 +58,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
-	type = get_file_type(sb.st_mode);
+	const char* type = get_file_type(sb.st_mode);
 	
 	printf("ID of containing device:  [%lx,%lx]\n", (long) major(sb.st_dev), (long) minor(sb.st_dev));
 
@@ -68,7 +67,20 @@ int main(int argc, char *argv[])
         print_access(&sb);
         printf("Mode:                     %lo (octal)\n", (unsigned long) sb.st_mode);
         printf("Link count:               %ld\n", (long) sb.st_nlink);
-        printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid);
+        printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid); 
+        
+       if(sb.st_mode & S_ISUID)
+		printf("set-user-ID\n");	
+		
+	if(sb.st_mode & S_ISGID)
+		printf("let-group-ID\n");	
+		
+	if(type[0] != 'd' && sb.st_mode & S_ISVTX)
+		printf("do not cache this file\n");	
+		
+	if(type[0] != 'd' && sb.st_mode & S_ISVTX)
+		printf("limited deletion flag\n");	
+	
 
         printf("Preferred I/O block size: %ld bytes\n", (long) sb.st_blksize);
         printf("File size:                %lld bytes\n", (long long) sb.st_size);
