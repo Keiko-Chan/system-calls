@@ -29,7 +29,7 @@ char dtype_char(unsigned dtype)
 		case DT_CHR:		return 'c';
 		case DT_DIR:		return 'd';
 		case DT_FIFO:		return 'f';
-		case DT_LNK:		return ';';
+		case DT_LNK:		return 'l';
 		case DT_REG:		return 'r';
 		case DT_SOCK:		return 's';
 		case DT_UNKNOWN:	return '?';	
@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 	
 	
 	closedir(dir_fd);
+	close(fdd);
 	
 	return 0;
 }
