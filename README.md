@@ -69,7 +69,7 @@ dirfd - возвращает файловый дескриптор, связан
 
 getdents64 -  читает несколько структур linux_dirent из каталога, на который указывает открытый файловый дескриптор fd, в буфер, указанный в dirp. В аргументе count задаётся размер этого буфера. При нормальном завершении работы возвращается количество прочитанных байт. При достижении конца каталога возвращается 0. 
 \\\\\\\\int getdents64(unsigned int fd, struct linux_dirent64 *dirp, unsigned int count);
-Использовать так: syscall(SYS_getdents64, fdd, buf, BUF_SIZE);
+Использовать так: syscall(SYS_getdents64, fdd, buf, BUF_SIZE); \n
 struct linux_dirent64 {
     ino64_t(long)        d_ino;    /* 64-битный номер иноды */
     off64_t(off_t)        d_off;    /* 64-битное смещение следующей структуры */
@@ -77,6 +77,9 @@ struct linux_dirent64 {
     unsigned char  d_type;   /* тип файла */
     char           d_name[]; /* имя файла (в конце null) */
 }
+
+mkdirat - пытается создать каталог с именем pathname. Если в pathname задан относительный путь, то он считается относительно каталога, на который ссылается файловый дескриптор dirfd.
+\\\\\\\\int mkdirat(int dirfd, const char *pathname, mode_t mode);
  
 
 
