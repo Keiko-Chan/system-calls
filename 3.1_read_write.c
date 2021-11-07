@@ -28,8 +28,8 @@ ssize_t writeall(int fd, const void *buf, size_t count)
 
 int main(int argc, char *argv[])
 {
-	const size_t block_size = 1024 * 1024;
-	int fdo, er, fdc;
+	const size_t block_size = 1024;
+	int fdo, er = 1, fdc;
 	char buffer[block_size];
 	struct stat sb;
 
@@ -54,34 +54,32 @@ int main(int argc, char *argv[])
 	fdo = open(argv[1], O_RDONLY, 0644);					//открываю файл откуда копирую
 	if(fdo < 0)
 	{
-		perror("Failed to open file");
+		perror("Failed to open file1");
 		return 2;
 	}
 	
-	fdc = creat("copy.dat",S_IREAD | S_IWRITE);				//создаю файл куда копирую
+	fdc = creat("copy.txt", S_IREAD | S_IWRITE | O_TRUNC);		//создаю файл куда копирую
 	if(fdc < 0)
 	{
-		perror("Failed to create file");
+		perror("Failed to create file2");
 		return 2;
 	}
-	
-	er = read(fdo, buffer, block_size);					//читаю файл
 	
 	while ( er != 0)							//пока не дойду до его конца
 	{
-		if(er == 1)							//может случиться ошибка доступа или вроде того
+		er = read(fdo, buffer, block_size);				//читаем
+		
+		if(er == -1)							//может случиться ошибка доступа или вроде того
 		{
 			perror("Error of reading");
 			return 2;
-		}
+		}	
 		
-		if(writeall(fdc, buffer, strlen(buffer)) < 0) 		//пишем то что прочитали в другой файл
+		if(writeall(fdc, buffer, er) < 0) 				//пишем то что прочитали в другой файл
 		{
 			perror("Error of writing");
 			return 2;
-		}
-		
-		er = read(fdo, buffer, block_size);				//снова читаем
+		}						
 	}
 	
 	if(close(fdo) < 0) {							//закрываем один файл
