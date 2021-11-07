@@ -171,9 +171,9 @@ int copy_dir(const char* what, const char* where, const char* how_to_name, mode_
 		
 		if(entry_type == 'r')
 		{			
-			char *copyto = (char*)calloc(strlen(name) + strlen(what) + 1, sizeof(char));
+			char *copyto = (char*)calloc(2*(strlen(name) + strlen(what) + 1), sizeof(char));
 			
-			char *path = (char*)calloc(strlen(how_to_name) + strlen(where) + 1, sizeof(char));
+			char *path = (char*)calloc(2*(strlen(how_to_name) + strlen(where) + 1), sizeof(char));
 			
 			strcat(path, where);			
 			strcat(path, how_to_name);
@@ -183,26 +183,6 @@ int copy_dir(const char* what, const char* where, const char* how_to_name, mode_
 			strcat(copyto, name);	
 												
 			copy_reg(copyto, path, name);
-			
-			free(copyto);
-			free(path);
-		}
-		
-		if((entry_type == 'd') && !((name[0] == 'c' && name[1] == 'o' && name[2] == 'p' && name[3] == 'y' && name[4] == '_') || name[0] == '.'))
-		{				
-			char *copyto = (char*)calloc(strlen(name) + 1 + strlen(what), sizeof(char));
-			
-			char *path = (char*)calloc(strlen(how_to_name) + strlen(where) + 1, sizeof(char));
-			
-			strcat(path, where);	
-			strcat(path, how_to_name);
-			strcat(path, "/");
-				
-			strcat(copyto, what);	
-			strcat(copyto, name);
-			strcat(copyto, "/");			
-									
-			copy_dir(copyto, path, name, sb.st_mode);
 			
 			free(copyto);
 			free(path);
