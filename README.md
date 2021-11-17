@@ -2,7 +2,8 @@
 # system-calls
 
 **stat** - вносит в структуру, на которую указывает statbuf, информацию, содержащуюся в файле, связанном с указателем filename. Структура stat определена в sys\stat.h. Структура stat определена в sys\stat.h. 
-```int stat (const char *pathname, struct stat *buf);
+```
+int stat (const char *pathname, struct stat *buf);
 ```
 
 **lstat** - похожа на stat, но возвращает информацию о символической ссылке, а не о файле на который та указывает. 
