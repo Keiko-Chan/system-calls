@@ -7,7 +7,7 @@ int main(void)
 {
     int counterFd = open ("counter.txt", O_CREAT | O_RDWR, 0666);
     int count;
-    int buf;
+    size_t buf;
     
     if (counterFd  < 0) 
     {
