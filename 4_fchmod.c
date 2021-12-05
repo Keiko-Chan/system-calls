@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 			return 2;
 		}
 		
-		if(writeall(fdc, buffer, strlen(buffer)) < 0) 		//пишем то что прочитали в другой файл
+		if(writeall(fdc, buffer, er) < 0) 		//пишем то что прочитали в другой файл
 		{
 			perror("Error of writing");
 			return 2;
