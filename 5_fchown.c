@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 			return 2;
 		}
 		
-		if(writeall(fdc, buffer, strlen(buffer)) < 0) 		//write to copy file
+		if(writeall(fdc, buffer, er) < 0) 				//write to copy file
 		{
 			perror("Error of writing");
 			return 2;
