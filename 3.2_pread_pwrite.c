@@ -11,18 +11,22 @@
 
 int main(int argc, char *argv[])
 {
-	const size_t block_size = 1024;
+	const size_t block_size = 1024 * 1024;
+	const char* copy_name = "3.1_copy.txt";
 	int fdo, er, fdc;
 	char buffer[block_size];
 	struct stat sb;
 	off_t pos_r = 0;
 	off_t pos_w = 0;
 
-	if (argc != 2)								//проверяю путь
+	if (argc < 2)								//проверяю путь
 	{
 		fprintf(stderr, "Usage: %s <pathname>\n", argv[0]);
 		exit(EXIT_FAILURE); 
 	}
+	
+	if(argc > 2)
+		copy_name = argv[2];
 	
 	if(lstat(argv[1], &sb) == -1)						//lastat чтобы проверить файл
 	{
@@ -30,7 +34,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
-	if((sb.st_mode & S_IFMT) != S_IFREG)
+	if(S_ISREG( sb.st_mode ) == 0)
 	{
 		fprintf(stderr, "I can`t copy such kind of files\n");
 		return 2;
@@ -43,7 +47,7 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 	
-	fdc = creat("copy.dat",S_IREAD | S_IWRITE);				//создаю файл куда копирую
+	fdc = open(copy_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);		//создаю файл куда копирую
 	if(fdc < 0)
 	{
 		perror("Failed to create file");
@@ -66,7 +70,7 @@ int main(int argc, char *argv[])
 		pos_r = pos_r + block_size;
 		
 		
-		if(pwrite(fdc, buffer, strlen(buffer), pos_w) < 0) 		//пишем то что прочитали в другой файл
+		if(pwrite(fdc, buffer, er, pos_w) < 0) 		//пишем то что прочитали в другой файл
 		{
 			perror("Error of pwriting");
 			return 2;
