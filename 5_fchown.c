@@ -28,17 +28,21 @@ ssize_t writeall(int fd, const void *buf, size_t count)
 
 int main(int argc, char *argv[])
 {
-	const size_t block_size = 1024;
+	const size_t block_size = 1024 * 1024;
 	int fdo, er, fdc;
+	const char* copy_name = "5_copy.txt";
 	char buffer[block_size];
 	struct stat sb;
 	struct timespec for_futime[2];
 
-	if (argc != 2)								//проверяю путь
+	if (argc < 2)								//проверяю путь
 	{
 		fprintf(stderr, "Usage: %s <pathname>\n", argv[0]);
 		exit(EXIT_FAILURE); 
 	}
+	
+	if(argc > 2)
+		copy_name = argv[2];
 	
 	if(lstat(argv[1], &sb) == -1)						//lastat to check file
 	{
@@ -46,7 +50,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	
-	if((sb.st_mode & S_IFMT) != S_IFREG)
+	if(S_ISREG( sb.st_mode ) == 0)
 	{
 		fprintf(stderr, "I can`t copy such kind of files\n");
 		return 2;
@@ -59,7 +63,7 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 	
-	fdc = creat("copy.txt", S_IREAD | S_IWRITE);				//create file for copy
+	fdc = open(copy_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);		//create file for copy
 	if(fdc < 0)
 	{
 		perror("Failed to create file");
