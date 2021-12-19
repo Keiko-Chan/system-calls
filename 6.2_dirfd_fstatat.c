@@ -54,11 +54,6 @@ int main(int argc, char *argv[])
 	}
 	
 	int fdd = dirfd(dir_fd); 				
-	if(fdd < 0)
-	{
-		perror("dirfd");
-		return 1;
-	}	
 	
 	struct dirent *entry;
 	
